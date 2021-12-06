@@ -48,14 +48,14 @@ class MakeWindow():
         self.material_space_label.configure(background= '#4682b4')
 
         # コンボボックス
-        self.material_rootkey_combobox = tkinter.ttk.Combobox(self.winf, values=["ルートキー1", "ルートキー2", "ルートキー3", "ルートキー4"])
+        self.material_rootkey_combobox = tkinter.ttk.Combobox(self.winf, values=["HKCR", "HKCU", "HKLM", "HKU", "HKCC"])
         self.material_rootkey_combobox.configure(state= "readonly")
-        self.material_rootkey_combobox.current(0)
-        self.material_registry_combobox = tkinter.ttk.Combobox(self.winf, values=["項目1", "項目2", "項目3", "項目4", "項目5", "項目6", "項目7",])
+        self.material_rootkey_combobox.current(1)
+        self.material_registry_combobox = tkinter.ttk.Combobox(self.winf, values=["文字列値", "バイナリ値", "DWORD(32bit)値", "QWORD(64bit)値", "複数行文字列値", "展開可能な文字列値", "キー",])
         self.material_registry_combobox.configure(state= "readonly")
         self.material_registry_combobox.current(0)
-        self.material_type_combobox = tkinter.ttk.Combobox(self.winf, values=["右クリック1", "右クリック2", "右クリック3", "特定拡張子"])
-        self.material_type_combobox.bind('<<ComboboxSelected>>', self.selectCombobox) # コンボボックスが変更されたときに発生するイベント
+        self.material_type_combobox = tkinter.ttk.Combobox(self.winf, values=["デスクトップ","背景", "フォルダ", "ファイル", "ライブラリ", "特定拡張子"])
+        self.material_type_combobox.bind('<<ComboboxSelected>>', self.selectType) # コンボボックスが変更されたときに発生するイベント
         self.material_type_combobox.configure(state= "readonly")
         self.material_type_combobox.current(0)
 
@@ -114,8 +114,8 @@ class MakeWindow():
         self.window.mainloop()
 
 
-    # コンボボックス選択時に動作する
-    def selectCombobox(self, event):
+    # タイプコンボボックスの項目が変わったときに動作する
+    def selectType(self, event):
         if(self.material_type_combobox.get() == "特定拡張子"):
             self.material_extension_textbox.configure(state= "normal")
         else:
@@ -125,23 +125,97 @@ class MakeWindow():
     # 設定項目の確認
     def showSetting(self):
 
-        str_rootkey = self.material_rootkey_combobox.get()
-        str_type = self.material_type_combobox.get()
-        str_registry = self.material_registry_combobox.get()
+        # str_rootkey = self.material_rootkey_combobox.get()
+        str_rootkey = self.convRootkey(self.material_rootkey_combobox.get())
+        # str_registry = self.material_registry_combobox.get()
+        str_registry = self.convRegistry(self.material_registry_combobox.get())
+        # str_type = self.material_type_combobox.get()
+        str_type = self.convType(self.material_type_combobox.get(), self.material_extension_textbox.get())
         # ここに例外処理がほしい
         str_extension = self.material_extension_textbox.get()
         str_exe = self.path_exe_file
-
 
 
         print(f'rootkey is {str_rootkey}')
         print(f' type is {str_type}')
         print(f'registry is {str_registry}')
         print(f'extension is {str_extension}')
-        print(f' exefile is {str_exe}')
+        print(f' exefile is {str_exe}\n\n')
+
+        self.addReg()
 
 
+    def convRootkey(self, temp_key):
+        if(temp_key == "HKCR"):
+            temp_key = winreg.HKEY_CLASSES_ROOT
+        elif(temp_key == "HKCU"):
+            temp_key = winreg.HKEY_CURRENT_USER
+        elif(temp_key == "HKLM"):
+            temp_key = winreg.HKEY_LOCAL_MACHINE
+        elif(temp_key == "HKU"):
+            temp_key = winreg.HKEY_USERS
+        elif(temp_key == "HKCC"):
+            temp_key = winreg.HKEY_CURRENT_CONFIG
+        return temp_key
 
+    def convRegistry(self, temp_reg):
+        if(temp_reg == "文字列値"):
+            temp_reg = winreg.REG_SZ
+        elif(temp_reg == "バイナリ値"):
+            temp_reg = winreg.REG_BINARY
+        elif(temp_reg == "DWORD(32bit)値"):
+            temp_reg = winreg.REG_DWORD
+        elif(temp_reg == "QWORD(64bit)値"):
+            temp_reg = winreg.REG_QWORD
+        elif(temp_reg == "複数行文字列値"):
+            temp_reg = winreg.REG_MULTI_SZ
+        elif(temp_reg == "展開可能な文字列値"):
+            temp_reg = winreg.REG_EXPAND_SZ
+        elif(temp_reg == "キー"):
+            # ここ何を入れたらいいか分らない
+            temp_reg = "キーを選択したけどよくわからん"
+        return temp_reg
+
+
+    def convType(self, temp_type, temp_extension):
+        if(temp_type == "デスクトップ"):
+            temp_type = "Software\\Classes\\DesktopBackground\\"
+        elif(temp_type == "拝啓"):
+            temp_type = "Software\\Classes\\Directory\\Background\\shell\\"
+        elif(temp_type == "フォルダ"):
+            temp_type = "Software\\Classes\\Directory\\shell\\"
+        elif(temp_type == "ファイル"):
+            temp_type = "Software\\Classes\\*\\shell\\"
+        elif(temp_type == "ライブラリ"):
+            temp_type = "Software\\Classes\\Folder\\shell\\"
+        elif(temp_type == "特定拡張子"):
+            temp_type = f"Software\\Classes\\SystemFileAssociations\\.{temp_extension}\\shell\\"
+        return temp_type
+
+
+    def addReg(self):
+        RegistryAdd().addKey()
+
+
+# レジストリの登録
+class RegistryAdd():
+    def addKey(self):
+        # 7-zipにtestキーを追加して値「hello world」を追加する
+        path = r'Software\\7-Zip\\test'
+
+        newkey = winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, path)
+        winreg.CloseKey
+
+        key = winreg.OpenKeyEx(winreg.HKEY_CURRENT_USER, path, access=winreg.KEY_WRITE)
+        winreg.SetValueEx(key, 'PanelPath0', 0, winreg.REG_SZ, 'hello world')
+        winreg.CloseKey(key)
+
+
+# レジストリの解除(削除)
+class RegistryDel():
+    def delKey(self):
+        # いつかやる
+        pass
 
 
 # メイン部
