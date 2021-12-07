@@ -1,4 +1,5 @@
 import os
+from tkinter.constants import FALSE, TRUE
 import winreg
 
 #参考
@@ -15,14 +16,18 @@ str_type = "" # 適応するレジストリの位置
 str_registry = "" # レジストリの型(?)の種類
 str_extension = "" # 対象拡張指名
 str_exe = "" # 実行ファイルpath
-str_name = ""
+str_name = "Default" # キーの名前
+str_description = "" # 右クリックしたときに出るメニューの名前
+str_shortcut = "" # ショートカット
 
 reg_rootkey = winreg.HKEY_CLASSES_ROOT # 使用するルートキー
-reg_type = "" # 適応するレジストリの位置
+reg_type = "test type" # 適応するレジストリの位置
 reg_registry = "" # レジストリの型(?)の種類
 reg_extension = "" # 対象拡張指名
 reg_exe = "" # 実行ファイルpath
-reg_name = ""
+reg_name = "Default"# キーの名前
+reg_description = "" # 右クリックしたときに出るメニューの名前
+reg_shortcut = "" # ショートカット
 
 
 # ウィンドウを作る
@@ -54,6 +59,8 @@ class MakeWindow():
         self.material_space_label = tkinter.Label(self.winf, text= " ")
         self.material_space_label.configure(background= '#4682b4')
         self.material_name_label = tkinter.Label(self.winf, text= "キーの名称")
+        self.material_description_label = tkinter.Label(self.winf, text= "右クリックで出る説明")
+        self.material_shortcut_label = tkinter.Label(self.winf, text= "ショートカットの設定")
 
          #選択によって表示されるレジストリキーのパスを出力するラベル
         self.material_overview_label = tkinter.Label(self.winf, text= "　　　作成されるキー　　　")
@@ -63,6 +70,8 @@ class MakeWindow():
         self.material_exe_overview_label = tkinter.Label(self.winf, text= " ")
         self.material_overview2_label = tkinter.Label(self.winf, text= "　　　生成されるレジストリ　　　")
         self.material_name_overview_label = tkinter.Label(self.winf, text= " ")
+        self.material_description_overview_label = tkinter.Label(self.winf, text= " ")
+        self.material_shortcut_overview_label = tkinter.Label(self.winf, text= " ")
 
         # コンボボックス
         self.material_rootkey_combobox = tkinter.ttk.Combobox(self.winf, values=["HKCR", "HKCU", "HKLM", "HKU", "HKCC"])
@@ -81,6 +90,8 @@ class MakeWindow():
         self.material_extension_textbox.insert(0, "*")
         self.material_extension_textbox.configure(state= "readonly")
         self.material_name_textbox = tkinter.ttk.Entry(self.winf)
+        self.material_description_textbox = tkinter.ttk.Entry(self.winf)
+        self.material_shortcut_textbox = tkinter.ttk.Entry(self.winf)
 
         # ボタン
         self.material_exe_button = tkinter.ttk.Button(self.winf, text= "参照", command= self.choiceExeFile)
@@ -99,8 +110,8 @@ class MakeWindow():
     def setWidget(self):
         self.material_title.grid(column= 0, row= 0, columnspan= 5, padx= 10, pady= 10, sticky= tkinter.W + tkinter.E)
 
-        self.material_space_label.grid(column= 1, row=1, rowspan= 3, padx=1)
-        self.material_space_label.grid(column= 3, row=1, rowspan= 3, padx=1)
+        self.material_space_label.grid(column= 1, row=1, rowspan= 8, padx=1)
+        self.material_space_label.grid(column= 3, row=1, rowspan= 8, padx=1)
 
         self.material_overview_label.grid(column= 4, row= 1, padx= 1, sticky= tkinter.W + tkinter.E )
 
@@ -125,12 +136,20 @@ class MakeWindow():
         self.material_registry_combobox.grid(column= 2, row= 6, padx= 2, pady= 10, sticky= tkinter.W + tkinter.E)
         self.material_registry_overview_label.grid(column= 4, row= 6, padx= 2, pady= 10, sticky= tkinter.W + tkinter.E)
 
-        self.material_exe_label.grid(column= 0, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
-        self.material_exe_button.grid(column= 2, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
-        self.material_exe_overview_label.grid(column= 4, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_description_label.grid(column= 0, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_description_textbox.grid(column= 2, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_description_overview_label.grid(column= 4, row= 7, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
 
-        self.material_add_button.grid(column= 0, row= 8, columnspan= 3, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
-        self.material_overview_button.grid(column= 4, row= 8, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_shortcut_label.grid(column= 0, row= 8, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_shortcut_textbox.grid(column= 2, row= 8, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_shortcut_overview_label.grid(column= 4, row= 8, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+
+        self.material_exe_label.grid(column= 0, row= 9, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_exe_button.grid(column= 2, row= 9, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_exe_overview_label.grid(column= 4, row= 9, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+
+        self.material_add_button.grid(column= 0, row= 10, columnspan= 3, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
+        self.material_overview_button.grid(column= 4, row= 10, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
 
 
 
@@ -163,6 +182,23 @@ class MakeWindow():
 
     # 設定項目の確認
     def showSetting(self):
+        global str_rootkey
+        global str_type
+        global str_registry
+        global str_extension
+        global str_exe
+        global str_name
+        global str_description
+        global str_shortcut
+
+        global reg_rootkey
+        global reg_type
+        global reg_registry
+        global reg_extension
+        global reg_exe
+        global reg_name
+        global reg_description
+        global reg_shortcut
 
         # str_registry = self.material_registry_combobox.get()
         reg_registry = self.convRegistry(self.material_registry_combobox.get())
@@ -178,23 +214,31 @@ class MakeWindow():
         # str_type = self.material_type_combobox.get()
         reg_type = self.convType(self.material_type_combobox.get(), self.convExtension(self.material_extension_textbox.get()))
 
+        # str_name = self.convName(self.material_name_textbox.get())
         reg_name = self.convName(self.material_name_textbox.get())
+        reg_description = self.convDescription(self.material_description_textbox.get())
 
+        reg_shortcut = self.convShortcut(self.material_shortcut_textbox.get())
+        if(not reg_registry):
+            pass # ここをやる
 
+        print(f'ルートキー(rootkey) is {self.material_rootkey_combobox.get()}')
+        print(f'対象項目(type) is {self.material_type_combobox.get()}')
+        print(f'キー名称(name) is {self.material_name_textbox.get()}')
+        print(f'拡張子(extension) is {self.material_extension_textbox.get()}')
+        print(f'レジストリ種類(registry) is {self.material_registry_combobox.get()}')
+        print(f'右クリック時説明(description)is {self.material_description_textbox.get()}')
+        print(f'ショートカット(shortcut)is {self.material_shortcut_textbox.get()}')
+        print(f'実行ファイルpath(exePATH) is {str_exe}\n')
 
-        print(f'ルートキー is {self.material_rootkey_combobox.get()}')
-        print(f'対象項目 is {self.material_type_combobox.get()}')
-        print(f'キー名称 is {self.material_name_textbox.get()}')
-        print(f'拡張子 is {self.material_extension_textbox.get()}')
-        print(f'レジストリ種類 is {self.material_registry_combobox.get()}')
-        print(f'実行ファイルpath is {str_exe}\n')
-
-        print(f'ルートキー is {reg_rootkey}')
-        print(f'対象項目 is {reg_type}')
-        print(f'キー名称 is {reg_name}')
-        print(f'拡張子 is {reg_extension}')
-        print(f'レジストリ種類 is {reg_registry}')
-        print(f'実行ファイルpath is {reg_exe}\n')
+        print(f'ルートキー(rootkey) is {reg_rootkey}')
+        print(f'対象項目(type) is {reg_type}')
+        print(f'キー名称(name) is {reg_name}')
+        print(f'拡張子(extension) is {reg_extension}')
+        print(f'レジストリ種類(registry) is {reg_registry}')
+        print(f'右クリック時説明(description)is {reg_description}')
+        print(f'ショートカット(shortcut)is {reg_shortcut}')
+        print(f'実行ファイルpath(exePATH) is {reg_exe}\n')
 
     def showOverview(self):
         show_key = self.material_rootkey_combobox.get()
@@ -208,8 +252,6 @@ class MakeWindow():
             show_key = "HKEY_USERS"
         elif(show_key == "HKCC"):
             show_key = "HKEY_CURRENT_CONFIG"
-        else:
-            show_key = "Something Error"
 
         self.material_rootkey_overview_label['text'] = show_key
 
@@ -217,9 +259,36 @@ class MakeWindow():
         show_type = self.convType(self.material_type_combobox.get(), self.convExtension(self.material_extension_textbox.get()))
         self.material_type_overview_label['text'] = "\\" + show_type[:-1]
 
-        show_name = self.convName(self.material_name_textbox.get())
+        if(not self.convName(self.material_name_textbox.get())):
+            show_name = str_name
+        else:
+            show_name = self.convName(self.material_name_textbox.get())
         self.material_name_overview_label['text'] = "\\" + show_name
 
+        show_reg = self.material_registry_combobox.get()
+        if(show_reg == "文字列値"):
+            show_reg = "REG_SZ"
+        elif(show_reg == "バイナリ値"):
+            show_reg = "REG_BINARY"
+        elif(show_reg == "DWORD(32bit)値"):
+            show_reg = "REG_DWORD"
+        elif(show_reg == "QWORD(64bit)値"):
+            show_reg = "REG_QWORD"
+        elif(show_reg == "複数行文字列値"):
+            show_reg = "REG_MULTI_SZ"
+        elif(show_reg == "展開可能な文字列値"):
+            show_reg = "REG_EXPAND_SZ"
+        elif(show_reg == "キー"):
+            show_reg = "よぐわがんない"
+        self.material_registry_overview_label['text'] = show_reg
+
+        show_description = self.convDescription(self.material_description_textbox.get())
+        self.material_description_overview_label['text'] = show_description
+
+        show_shortcut = self.convShortcut(self.material_shortcut_textbox.get())
+        if(not show_shortcut):
+            self.material_shortcut_overview_label['text'] = "定義できませんでした"
+        self.material_shortcut_overview_label['text'] = show_shortcut
 
 
     def convRootkey(self, temp_key):
@@ -233,6 +302,8 @@ class MakeWindow():
             temp_key = winreg.HKEY_USERS
         elif(temp_key == "HKCC"):
             temp_key = winreg.HKEY_CURRENT_CONFIG
+        else:
+            temp_key = "Something Error (in rootkey)"
         return temp_key
 
     def convRegistry(self, temp_reg):
@@ -251,12 +322,14 @@ class MakeWindow():
         elif(temp_reg == "キー"):
             # ここ何を入れたらいいか分らない
             temp_reg = "キーを選択したけどよくわからん"
+        else:
+            temp_reg = "Something Error(in registry type) "
         return temp_reg
 
 
     def convType(self, temp_type, temp_extension):
         if(temp_type == "デスクトップ"):
-            temp_type = "Software\\Classes\\DesktopBackground\\"
+            temp_type = "tSoftware\\Classes\\DesktopBackground\\"
         elif(temp_type == "背景"):
             temp_type = "Software\\Classes\\Directory\\Background\\shell\\"
         elif(temp_type == "フォルダ"):
@@ -267,6 +340,8 @@ class MakeWindow():
             temp_type = "Software\\Classes\\Folder\\shell\\"
         elif(temp_type == "特定拡張子"):
             temp_type = f"Software\\Classes\\SystemFileAssociations\\.{temp_extension}\\shell\\"
+        else:
+            temp_type = "Something Error (in right click menu)"
         return temp_type
 
     def convExtension(self, temp_extension):
@@ -283,14 +358,19 @@ class MakeWindow():
 
     def convName(self, temp_name):
         # 頭と尻についた空白を取り除く
-        temp_name = temp_name.strip()
-        # 2単語以上で構成されている場合最初の単語を選択する
+        temp_name = temp_name.strip() # 2単語以上で構成されている場合最初の単語を選択する
         # temp_name = temp_name.split(" ")[0]
 
-        # 入力された単語の中に不適切な文字が入っていないか検証し、あれば削除する
-        sym = '.\\/:*?"<>|'
-        for i in range(len(sym)):
-            temp_name = temp_name.replace(sym[i], "")
+
+        if (not self.material_name_textbox.get()):
+            temp_name = str_name
+        else:
+            # print("処理前のtemp_name は" + temp_name)
+            # 入力された単語の中に不適切な文字が入っていないか検証し、あれば削除する
+            sym = '.\\/:*?"<>|'
+            for i in range(len(sym)):
+                temp_name = temp_name.replace(sym[i], "")
+
         return temp_name
 
     def convExe(self, temp_exe):
@@ -299,6 +379,28 @@ class MakeWindow():
         # temp_exe = temp_exe.strip()
 
         return temp_exe
+
+    def convDescription(self, temp_description):
+        sym = '.\\/:*?"<>|&'
+        for i in range(len(sym)):
+            temp_description = temp_description.replace(sym[i], "")
+
+        return temp_description
+
+    def convShortcut(self, temp_shortcut):
+        temp_shortcut = temp_shortcut.strip()
+        temp_shortcut = temp_shortcut.split(" ")[0]
+
+        sym = '.\\/:*?"<>|&'
+        for i in range(len(sym)):
+            temp_shortcut = temp_shortcut.replace(sym[i], "")
+
+        if(not temp_shortcut):
+            return f'&{temp_shortcut}'
+        temp_shortcut = list(temp_shortcut)[0]
+
+        return f'&{temp_shortcut}'
+
 
     def addReg(self):
         self.showSetting()
@@ -326,10 +428,17 @@ class RegistryAdd():
         # レジストリキーを追加する
         # ここで文字列が帰ってこない 謎
         temp_reg_path = reg_type + reg_name
-        # new_key = winreg.CreateKeyEx(reg_rootkey, temp_reg_path)
-        # winreg.CloseKey
+        create_key = winreg.CreateKeyEx(reg_rootkey, temp_reg_path)
+        winreg.CloseKey
 
-        print("ここです" + temp_reg_path)
+        temp_reg_exe = f'"{reg_exe}" "(&{reg_shortcut})"'
+
+        print("reg_e =" + temp_reg_exe)
+
+        # key = winreg.OpenKeyEx(reg_rootkey, temp_reg_path, access=winreg.KEY_WRITE)
+        # 文字列値と展開可能な文字列値のみ読み取ることができた、バイナリ値などは対応を調べる
+        # winreg.SetValueEx(key, 'test', 0, reg_registry, temp_reg_exe)
+        # winreg.CloseKey(key)
 
 
 
