@@ -63,6 +63,7 @@ class MakeWindow():
         self.material_type_label = tkinter.Label(self.winf, text = "対象項目")
         self.material_type_label.configure(foreground='#b22222')
         self.material_exe_label = tkinter.Label(self.winf, text = "適応実行ファイル")
+        self.material_exe_label.configure(foreground='#b22222')
         self.material_extension_label = tkinter.Label(self.winf, text = "対象拡張指名")
         self.material_extension_label.configure(foreground='#c0c0c0')
         self.material_space_label = tkinter.Label(self.winf, text= " ")
