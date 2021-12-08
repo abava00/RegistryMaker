@@ -29,13 +29,14 @@ reg_name = "Default"# キーの名前
 reg_description = "" # 右クリックしたときに出るメニューの名前
 reg_shortcut = "" # ショートカット
 
+version = "0.1"
 
 # ウィンドウを作る
 class MakeWindow():
     def __init__(self):
         self.window = tkinter.Tk()
         self.window.geometry() # サイズ設定
-        self.window.title("hello world")
+        self.window.title("RegistryMaker ver." + version)
         self.window.resizable(width= False, height= False)
         self.path_exe_file = ""
         self.window.configure(background= "#add8e6")
@@ -55,7 +56,7 @@ class MakeWindow():
         if(random.randint(0,10) != 5):
             self.material_system = tkinter.Label(self.winf, text= "試作版　試作版　試作版　試作版")
         else:
-            self.material_system = tkinter.Label(self.winf, text= "BIG'B' IS WATCHING YOU版")
+            self.material_system = tkinter.Label(self.winf, text= "BIG'B' IS WATCHING YOU")
         self.material_system.configure(foreground= '#ff00ff' ,background= '#4682b4')
         # self.material_title = tkinter.Label(self.winf,width= 50, height= 100, text= "右クリックしたときに出る項目追加するやーつ")
         self.material_rootkey_label = tkinter.Label(self.winf, text= "ルートキー設定")
