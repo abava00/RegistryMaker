@@ -227,8 +227,8 @@ class MakeWindow():
 
         # ファイルを参照していない場合での例外処理があるとうれしくなる
         str_exe = self.path_exe_file
-        # reg_exe = self.convExe(self.path_exe_file)
-        reg_exe = str_exe
+        reg_exe = self.convExe(self.path_exe_file)
+        # reg_exe = str_exe
         # str_rootkey = self.material_rootkey_combobox.get()
         reg_rootkey = self.convRootkey(self.material_rootkey_combobox.get())
         # str_type = self.material_type_combobox.get()
@@ -310,7 +310,8 @@ class MakeWindow():
         if(self.material_shortcut_textbox.get() == "" and self.material_shortcut_textbox.get() == ""):
             show_shortcut = ""
         self.material_shortcut_overview_label['text'] = show_shortcut
-        self.material_exe_overview_label['text'] = self.path_exe_file
+        show_exe = self.convExe(self.path_exe_file)
+        self.material_exe_overview_label['text'] = show_exe
 
 
     def convRootkey(self, temp_key):
@@ -396,9 +397,7 @@ class MakeWindow():
         return temp_name
 
     def convExe(self, temp_exe):
-        temp_exe = temp_exe.split("/")[-1]
-        temp_exe = temp_exe.split(".")[0]
-        # temp_exe = temp_exe.strip()
+        temp_exe = temp_exe.replace('/', '\\')
 
         return temp_exe
 
@@ -464,9 +463,11 @@ class RegistryAdd():
             name = None
             winreg.SetValueEx(key, name, 0, reg_registry, temp_exe_path)
 
-        # temp_reg_exe = f'"{reg_exe}" "(&{reg_shortcut})"'
+        # print(temp_data)
+        # print(reg_exe)
 
-        # print("reg_e =" + temp_reg_exe)
+
+
 
         # key = winreg.OpenKeyEx(reg_rootkey, temp_reg_path, access=winreg.KEY_WRITE)
         # 文字列値と展開可能な文字列値のみ読み取ることができた、バイナリ値などは対応を調べる
