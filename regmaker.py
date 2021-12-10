@@ -313,6 +313,17 @@ class MakeWindow():
         show_exe = self.convExe(self.path_exe_file)
         self.material_exe_overview_label['text'] = show_exe
 
+        show_full = ['keyPATH', 'regDATA', 'regNUMBER', 'commandNAME', 'commandEXE']
+        show_full[0] = show_key + show_type + show_name
+        show_full[1] = show_reg
+        show_full[2] = show_description
+        show_full[3] = show_shortcut
+        show_full[4] = show_exe
+
+
+        return show_full
+
+
 
     def convRootkey(self, temp_key):
         if(temp_key == "HKCR"):
@@ -425,7 +436,17 @@ class MakeWindow():
 
     def addReg(self):
         self.showSetting()
-        RegistryAdd().addKey()
+        temp = self.showOverview()
+
+
+        # 確認ダイアログ表示
+        window_message = tkinter.messagebox.askyesno('確認', f'レジストリキー:\n{temp[0]}　に、\n型:{temp[1]}　で\nデータ:{temp[2]}\nを登録しますか？')
+
+        if (window_message):
+            RegistryAdd().addKey()
+            return
+
+        return
 
 
 # レジストリの登録
