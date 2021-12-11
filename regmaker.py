@@ -2,7 +2,7 @@ import os
 import random
 import winreg
 import tkinter
-from tkinter import ttk
+from tkinter import Widget, ttk
 from tkinter import filedialog
 
 #参考
@@ -78,11 +78,14 @@ class MakeWindow():
          #選択によって表示されるレジストリキーのパスを出力するラベル
         self.material_overview_label = tkinter.Label(self.winf, text= "　　　生成されるキー　　　")
         self.material_rootkey_overview_label = tkinter.Label(self.winf, text= "")
+        self.material_rootkey_overview_label.bind("<Button-1>", self.clickLabel)
         self.material_registry_overview_label = tkinter.Label(self.winf, text= " ")
         self.material_type_overview_label = tkinter.Label(self.winf, text= " ")
+        self.material_type_overview_label.bind("<Button-1>", self.clickLabel)
         self.material_exe_overview_label = tkinter.Label(self.winf, text= " ")
         self.material_overview2_label = tkinter.Label(self.winf, text= "　　　生成されるデータ　　　")
         self.material_name_overview_label = tkinter.Label(self.winf, text= " ")
+        self.material_name_overview_label.bind("<Button-1>", self.clickLabel)
         self.material_description_overview_label = tkinter.Label(self.winf, text= " ")
         self.material_shortcut_overview_label = tkinter.Label(self.winf, text= " ")
 
@@ -199,6 +202,22 @@ class MakeWindow():
             self.material_extension_textbox.insert(0, "*")
             self.material_extension_textbox.configure(state= "readonly", foreground= '#c0c0c0')
             self.material_extension_label.configure(foreground='#c0c0c0')
+
+    def clickLabel(self, event):
+        subwin = tkinter.Tk()
+        subwin.geometry("630x130")
+        subwin.title("予測される生成キーPATH")
+
+        temp_massage = self.showOverview()
+
+        path = tkinter.ttk.Entry(subwin)
+        path.place(x = 10, y = 10, width=600, height=100)
+        path.insert(0, temp_massage[0])
+        # path.configure(state= "readonly")
+        # path.grid()
+
+
+
 
     # 設定項目の確認
     def showSetting(self):
@@ -436,17 +455,26 @@ class MakeWindow():
 
     def addReg(self):
         self.showSetting()
-        temp = self.showOverview()
 
+
+        if (self.confirmationWindow()):
+            RegistryAdd().addKey()
+            # print("True")
+            return
+        # print("false")
+
+        return
+
+    def confirmationWindow(self):
+        temp = self.showOverview()
+        if(self.path_exe_file == ""):
+            tkinter.messagebox.showerror("エラー", "多分 実行ファイルが選択されていません\n")
+            return False
 
         # 確認ダイアログ表示
         window_message = tkinter.messagebox.askyesno('確認', f'レジストリキー:\n{temp[0]}　に、\n型:{temp[1]}　で\nデータ:{temp[2]}\nを登録しますか？')
+        return window_message
 
-        if (window_message):
-            RegistryAdd().addKey()
-            return
-
-        return
 
 
 # レジストリの登録
