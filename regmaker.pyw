@@ -10,7 +10,6 @@ from tkinter import filedialog
 # https://itasuke.hatenablog.com/entry/2018/01/08/133510
 
 
-
 # 宣言
 str_rootkey = "" # 使用するルートキー
 str_type = "" # 適応するレジストリの位置
@@ -30,7 +29,7 @@ reg_name = "Default"# キーの名前
 reg_description = "" # 右クリックしたときに出るメニューの名前
 reg_shortcut = "" # ショートカット
 
-version = "0.1"
+version = "0.9"
 
 path = os.getcwd()
 lnker = f'{path}\\lnkmaker.vbs'
@@ -44,13 +43,15 @@ class MakeWindow():
         self.window.resizable(width= False, height= False)
         self.path_exe_file = ""
         self.window.configure(background= "#add8e6")
+        self.window.iconbitmap(default= "pics/icon.ico")
+
 
     # フレーム作成
     def makeFrame(self):
         self.winf = tkinter.Frame(self.window)
         self.winf.grid(column= 0, row= 0, sticky= tkinter.NSEW, padx= 5, pady= 5) # NSEW:位置揃え, padx,y:上下、左右の余白
         # self.winf.grid(column= 0, row= 0, padx= 10, pady= 10) # NSEW:位置揃え, padx,y:上下、左右の余白
-        self.winf.configure(background="#4682b4")
+        self.winf.configure(background="#bbbbbb")
 
     # ウィジェット作成
     def makeWidget(self):
@@ -58,10 +59,10 @@ class MakeWindow():
         self.material_title = tkinter.Label(self.winf, text= "右クリックしたときに出る項目追加するやーつ")
 
         if(random.randint(0,10) != 5):
-            self.material_system = tkinter.Label(self.winf, text= "試作版　試作版　試作版　試作版")
+            self.material_system = tkinter.Label(self.winf, text= "This is description")
         else:
             self.material_system = tkinter.Label(self.winf, text= "BIG'B' IS WATCHING YOU")
-        self.material_system.configure(foreground= '#fd7e00' ,background= '#4682b4')
+        self.material_system.configure(foreground= '#fd7e00' ,background= '#bbbbbb')
         # self.material_title = tkinter.Label(self.winf,width= 50, height= 100, text= "右クリックしたときに出る項目追加するやーつ")
         self.material_rootkey_label = tkinter.Label(self.winf, text= "ルートキー設定")
         self.material_registry_label = tkinter.Label(self.winf, text= "レジストリの種類")
@@ -72,7 +73,7 @@ class MakeWindow():
         self.material_extension_label = tkinter.Label(self.winf, text = "対象拡張指名")
         self.material_extension_label.configure(foreground='#c0c0c0')
         self.material_space_label = tkinter.Label(self.winf, text= " ")
-        self.material_space_label.configure(background= '#4682b4')
+        self.material_space_label.configure(background= '#bbbbbb')
         self.material_name_label = tkinter.Label(self.winf, text= "キーの名称")
         self.material_name_label.configure(foreground='#b22222')
         self.material_description_label = tkinter.Label(self.winf, text= "右クリックで出る説明")
