@@ -61,7 +61,7 @@ class MakeWindow():
             self.material_system = tkinter.Label(self.winf, text= "試作版　試作版　試作版　試作版")
         else:
             self.material_system = tkinter.Label(self.winf, text= "BIG'B' IS WATCHING YOU")
-        self.material_system.configure(foreground= '#ff00ff' ,background= '#4682b4')
+        self.material_system.configure(foreground= '#fd7e00' ,background= '#4682b4')
         # self.material_title = tkinter.Label(self.winf,width= 50, height= 100, text= "右クリックしたときに出る項目追加するやーつ")
         self.material_rootkey_label = tkinter.Label(self.winf, text= "ルートキー設定")
         self.material_registry_label = tkinter.Label(self.winf, text= "レジストリの種類")
