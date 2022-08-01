@@ -3,7 +3,7 @@ import random
 import winreg
 import subprocess
 import tkinter
-from tkinter import Widget, ttk
+from tkinter import ttk
 from tkinter import filedialog
 
 #参考
