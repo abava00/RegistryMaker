@@ -455,19 +455,19 @@ class MakeWindow():
 
     def convType(self, temp_type, temp_extension):
         if(temp_type == "デスクトップ"):
-            temp_type = "Software\\Classes\\DesktopBackground\\"
+            temp_type = "\\Software\\Classes\\DesktopBackground\\"
         elif(temp_type == "フォルダ背景"):
-            temp_type = "Software\\Classes\\Directory\\Background\\shell\\"
+            temp_type = "\\Software\\Classes\\Directory\\Background\\shell\\"
         elif(temp_type == "フォルダ"):
-            temp_type = "Software\\Classes\\Directory\\shell\\"
+            temp_type = "\\Software\\Classes\\Directory\\shell\\"
         elif(temp_type == "ファイル"):
-            temp_type = "Software\\Classes\\*\\shell\\"
+            temp_type = "\\Software\\Classes\\*\\shell\\"
         elif(temp_type == "特殊フォルダ"):
-            temp_type = "Software\\Classes\\Folder\\shell\\"
+            temp_type = "\\Software\\Classes\\Folder\\shell\\"
         elif(temp_type == "特定拡張子"):
-            temp_type = f"Software\\Classes\\SystemFileAssociations\\.{temp_extension}\\shell\\"
+            temp_type = f"\\Software\\Classes\\SystemFileAssociations\\.{temp_extension}\\shell\\"
         elif(temp_type == "スタートメニュー"):
-            temp_type = f"StartMenu\\"
+            temp_type = f"\\StartMenu\\"
         else:
             temp_type = "Something Error (in right click menu)"
         return temp_type
