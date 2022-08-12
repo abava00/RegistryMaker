@@ -1,4 +1,5 @@
 import os
+import pathlib
 import random
 import winreg
 import subprocess
@@ -29,9 +30,9 @@ reg_name = "Default"# キーの名前
 reg_description = "" # 右クリックしたときに出るメニューの名前
 reg_shortcut = "" # ショートカット
 
-version = "0.9"
+version = "0.9.1"
 
-path = os.getcwd()
+path = os.getcwd() # カレントディレクトリ
 
 # ウィンドウを作る
 class MakeWindow():
@@ -48,8 +49,8 @@ class MakeWindow():
     # フレーム作成
     def makeFrame(self):
         self.winf = tkinter.Frame(self.window)
-        self.winf.grid(column= 0, row= 0, sticky= tkinter.NSEW, padx= 5, pady= 5) # NSEW:位置揃え, padx,y:上下、左右の余白
-        # self.winf.grid(column= 0, row= 0, padx= 10, pady= 10) # NSEW:位置揃え, padx,y:上下、左右の余白
+        self.winf.grid(column= 0, row= 0, sticky= tkinter.NSEW) # NSEW:位置揃え, padx,y:上下、左右の余白
+        # self.winf.grid(column= 0, row= 0, sticky= tkinter.NSEW, padx= 5, pady= 5) # NSEW:位置揃え, padx,y:上下、左右の余白
         self.winf.configure(background="#bbbbbb")
 
     # ウィジェット作成
@@ -122,10 +123,11 @@ class MakeWindow():
         self.material_exe_button.bind('<Return>', lambda event: self.choiceExeFile())
         self.material_add_button = tkinter.ttk.Button(self.winf, text= "レジストリ追加", command= self.addData)
         self.material_add_button.bind('<Return>', lambda event: self.addData())
-
-         # 概要表示ボタン
         self.material_overview_button = tkinter.ttk.Button(self.winf, text= "レジストリキーを確認", command= self.showOverview)
         self.material_overview_button.bind('<Return>', lambda event: self.showOverview())
+        self.material_log_button = tkinter.ttk.Button(self.winf, text= "log", command= RegistryLog().showLog)
+        self.material_log_button.bind('<Return>', lambda event: RegistryLog().showLog())
+
 
 
 
@@ -176,6 +178,8 @@ class MakeWindow():
         self.material_add_button.grid(column= 0, row= 10, columnspan= 3, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
         self.material_overview_button.grid(column= 4, row= 10, padx= 2, pady= 5, sticky= tkinter.W + tkinter.E)
 
+        self.material_log_button.grid(column= 4, row= 11, padx= 1, pady= 1, sticky= tkinter.E)
+
 
 
 
@@ -225,7 +229,7 @@ class MakeWindow():
 
 
     # 設定項目の確認
-    def showSetting(self):
+    def showDebug(self):
         global str_rootkey
         global str_type
         global str_registry
@@ -459,7 +463,7 @@ class MakeWindow():
 
 
     def addData(self):
-        self.showSetting()
+        self.showDebug()
 
 
         if (self.confirmationWindow()):
@@ -467,6 +471,7 @@ class MakeWindow():
             DataAdd().addKey()
             # DataAdd().dummy_addKey()
             # print("True")
+            RegistryLog().writeLog(f'{self.showOverview()[0]}\{self.showOverview()[2]}')
             return
 
         # print("false")
@@ -531,6 +536,31 @@ class RegistryDel():
         # いつかやる
         pass
 
+# 登録したレジストリの記録を操作する
+class RegistryLog():
+    def __init__(self):
+        # logファイルの場所
+        self.logfile = f'{path}/RM.log'
+        # logファイルの存在確認
+        if(not os.path.isfile(self.logfile)):
+            lfile = pathlib.Path(self.logfile)
+            # 存在しない場合 生成する
+            lfile.touch()
+
+    def writeLog(self, new_line):
+        text = new_line
+        with open(self.logfile, mode='a', encoding='utf-8') as f:
+            f.write(f'{text}\n')
+        # 登録したレジストリのログをTempファイルに保存する
+
+    def showLog(self):
+        # ログを表示する
+        if(not os.path.isfile(self.logfile)):
+            pass
+        else:
+            subprocess.call(f'notepad.exe {self.logfile}' ,shell=True)
+
+
 
 # メイン部
 def Main():
@@ -538,7 +568,6 @@ def Main():
     window.makeFrame()
     window.makeWidget()
     window.setWidget()
-
 
     window.showWindow()
 
