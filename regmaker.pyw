@@ -32,7 +32,6 @@ reg_shortcut = "" # ショートカット
 version = "0.9"
 
 path = os.getcwd()
-lnker = f'{path}\\lnkmaker.vbs'
 
 # ウィンドウを作る
 class MakeWindow():
@@ -105,7 +104,7 @@ class MakeWindow():
         self.material_registry_combobox.current(0)
          # デスクトップでの右クリックメニューの変更を確認できなかった
         # self.material_type_combobox = tkinter.ttk.Combobox(self.winf, values=["デスクトップ","フォルダ背景", "フォルダ", "ファイル", "特殊フォルダ", "特定拡張子"])
-        self.material_type_combobox = tkinter.ttk.Combobox(self.winf, values=["フォルダ背景", "フォルダ", "ファイル", "特殊フォルダ", "特定拡張子", "スタートメニュー"])
+        self.material_type_combobox = tkinter.ttk.Combobox(self.winf, values=["フォルダ背景", "フォルダ", "ファイル", "特殊フォルダ", "特定拡張子"])
         self.material_type_combobox.bind('<<ComboboxSelected>>', self.selectType) # コンボボックスが変更されたときに発生するイベント
         self.material_type_combobox.configure(state= "readonly")
         self.material_type_combobox.current(2)
@@ -209,36 +208,6 @@ class MakeWindow():
             self.material_extension_textbox.configure(state= "readonly", foreground= '#c0c0c0')
             self.material_extension_label.configure(foreground='#c0c0c0')
 
-         # スタートメニューを選択した場合
-        if(self.material_type_combobox.get() == "スタートメニュー"):
-             # 設定できない項目の除外
-            self.material_rootkey_label.configure(foreground='#c0c0c0')
-            self.material_rootkey_combobox.configure(foreground='#c0c0c0')
-             # Registryコンボボックスの項目名、内容の変更
-            self.material_registry_label['text']= "登録する場所"
-            self.material_registry_label.configure(foreground='#b22222')
-            self.material_registry_combobox['values'] = ("上","中","下")
-            self.material_registry_combobox.configure(state= "readonly")
-            self.material_registry_combobox.current(0)
-             # 概要ラベルの設定変更
-            self.material_overview_label['text'] = "ショートカットを作成する場所"
-             # 名前ラベルの設定変更
-            self.material_name_label['text'] = "ショートカットの名称"
-
-        else:
-            self.material_rootkey_label.configure(foreground='#000000')
-            self.material_rootkey_combobox.configure(foreground='#000000')
-            self.material_name_label.configure(foreground='#b22222')
-
-            self.material_registry_combobox['values'] = ("文字列値","展開可能な文字列値")
-            self.material_registry_label.configure(foreground='#000000')
-            self.material_registry_combobox.configure(state= "readonly")
-            self.material_registry_combobox.current(0)
-            self.material_registry_label['text'] = "レジストリの種類"
-
-            self.material_name_label['text'] = "キーの名称"
-
-            self.material_overview_label['text'] = "　　　生成されるキー　　　"
 
     def clickLabel(self, event):
 
@@ -252,8 +221,6 @@ class MakeWindow():
         path.place(x = 10, y = 10, width=600, height=100)
         path.insert(0, temp_massage[0])
 
-        if(self.material_type_combobox.get() == "スタートメニュー"):
-            subprocess.call(['explorer.exe', temp_massage[0]])
 
 
 
@@ -356,13 +323,6 @@ class MakeWindow():
         elif(show_reg == "キー"):
             show_reg = "よぐわがんない"
 
-        elif(show_reg == "上"):
-            show_reg = "Group3"
-        elif(show_reg == "中"):
-            show_reg = "Group2"
-        elif(show_reg == "下"):
-            show_reg = "Group1"
-
         show_description = self.convDescription(self.material_description_textbox.get())
 
         show_shortcut = self.convShortcut(self.material_shortcut_textbox.get())
@@ -385,25 +345,6 @@ class MakeWindow():
         self.material_description_overview_label['text'] = show_description
         self.material_shortcut_overview_label['text'] = show_shortcut
         self.material_exe_overview_label['text'] = show_exe
-
-        # C:\Users\abava\AppData\Local\Microsoft\Windows\WinX\Group3
-        if(self.material_type_combobox.get() == "スタートメニュー"):
-            show_key = os.path.expanduser('~')
-            show_type = f"\\AppData\\Local\\Microsoft\\Windows\\WinX"
-            self.material_rootkey_overview_label['text'] = show_key
-            self.material_type_overview_label['text'] = show_type
-            self.material_name_overview_label['text'] = f"\\{show_reg}"
-            self.material_registry_overview_label['text'] = show_name
-            # self.material_registry_overview_label['text'] = " "
-            show_full = ['keyPATH', 'regDATA', 'regNUMBER', 'commandNAME', 'commandEXE']
-            show_temp = show_name
-            show_name = f"\\{show_reg}"
-            show_reg = show_temp
-            show_full[0] = show_key + show_type + show_name
-            show_full[1] = show_reg
-            show_full[2] = show_description
-            show_full[3] = show_shortcut
-            show_full[4] = show_exe
 
         return show_full
 
@@ -441,15 +382,6 @@ class MakeWindow():
             # ここ何を入れたらいいか分らない
             temp_reg = "キーを選択したけどよくわからん"
 
-         # スタートメニューの場合
-        elif(temp_reg == "上"):
-            temp_reg = "Group3"
-        elif(temp_reg == "中"):
-            temp_reg = "Group2"
-        elif(temp_reg == "下"):
-            temp_reg = "Group1"
-        else:
-            temp_reg = "Something Error(in registry type) "
         return temp_reg
 
 
@@ -466,8 +398,6 @@ class MakeWindow():
             temp_type = "\\Software\\Classes\\Folder\\shell\\"
         elif(temp_type == "特定拡張子"):
             temp_type = f"\\Software\\Classes\\SystemFileAssociations\\.{temp_extension}\\shell\\"
-        elif(temp_type == "スタートメニュー"):
-            temp_type = f"\\StartMenu\\"
         else:
             temp_type = "Something Error (in right click menu)"
         return temp_type
@@ -534,30 +464,23 @@ class MakeWindow():
 
         if (self.confirmationWindow()):
 
-            if(self.material_type_combobox.get() == "スタートメニュー"):
-                DataAdd().addlnk()
-                # DataAdd().dummy_addlnk()
-            else:
-                DataAdd().addKey()
-                # DataAdd().dummy_addKey()
-                # print("True")
-                return
-        # print("false")
+            DataAdd().addKey()
+            # DataAdd().dummy_addKey()
+            # print("True")
+            return
 
+        # print("false")
         return
 
     def confirmationWindow(self):
         temp = self.showOverview()
-        if(self.material_type_combobox.get() == "スタートメニュー"):
-            return True
-        else:
-            if(self.path_exe_file == ""):
-                tkinter.messagebox.showerror("エラー", "多分 実行ファイルが選択されていません\n")
-                return False
+        if(self.path_exe_file == ""):
+            tkinter.messagebox.showerror("エラー", "多分 実行ファイルが選択されていません\n")
+            return False
 
-            # 確認ダイアログ表示
-            window_message = tkinter.messagebox.askyesno('確認', f'レジストリキー: \n{temp[0]}　に\n型: {temp[1]}　で\nデータ: {temp[2]}　を\n登録しますか？')
-            return window_message
+        # 確認ダイアログ表示
+        window_message = tkinter.messagebox.askyesno('確認', f'レジストリキー: \n{temp[0]}　に\n型: {temp[1]}　で\nデータ: {temp[2]}　を\n登録しますか？')
+        return window_message
 
 
 
@@ -601,25 +524,6 @@ class DataAdd():
         # 文字列値と展開可能な文字列値のみ読み取ることができた、バイナリ値などは対応を調べる
         # winreg.SetValueEx(key, 'test', 0, reg_registry, temp_reg_exe)
         # winreg.CloseKey(key)
-
-    def addlnk(self):
-
-
-        temp_root = os.path.expanduser('~')
-        temp_path = f"\\AppData\\Local\\Microsoft\\Windows\\WinX"
-        lnk_path = temp_root + temp_path + f"\\{reg_registry}"
-        lnk_exe = reg_exe
-        lnk_name = reg_name
-        lnk_shortcut = reg_shortcut.split('&')[-1]
-        lnk_description = reg_description
-
-        subprocess.call(['explorer.exe', lnk_path])
-
-        # ショートカットを作成する処理(できませんでした)
-        # subprocess.call([lnker, lnk_exe, lnk_path, lnk_name, lnk_description, lnk_shortcut], shell= True)
-
-        return
-
 
 # レジストリの解除(削除)
 class RegistryDel():
